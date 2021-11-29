@@ -7,11 +7,13 @@ const logger = require('./modules/logger');
 const cors = require('cors');
 const path = require('path');
 const gateway = require('./modules/gateway');
-
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 app.use('/api/v1', gateway.router);
 
 app.use((req, res) => {

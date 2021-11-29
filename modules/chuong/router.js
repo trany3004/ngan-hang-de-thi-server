@@ -5,7 +5,7 @@ const handle = require('./handle');
 router.post('/', async(req, res) => {
     const body = req.body;
     try {
-        const rs = await handle.create(body.ten);
+        const rs = await handle.create(body);
         res.status(200).json(rs);
     } catch (error) {
         res.status(400).json(error);
@@ -25,7 +25,9 @@ router.put('/:id', async function (req, res) {
 
 router.get('/', async function (req, res) {
     try {
-        const rs = await handle.getList();
+        const query = req.query;
+        console.log('Query >>>>', query);
+        const rs = await handle.getByMonHocAndKhoiHoc(query);
         res.status(200).json(rs);
     } catch (error) {
         res.status(400).json(error);

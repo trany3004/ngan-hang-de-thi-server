@@ -20,8 +20,17 @@ const schema = new Schema({
     {
         type: Schema.Types.ObjectId,
         ref: 'chuong'
+    },
+    img: {
+        type: String
+    },
+    noidung: {
+        type: String,
+        required: true
+    },
+    image: {
+        type: String
     }
-    
 }, {
     timestamps: true
   })

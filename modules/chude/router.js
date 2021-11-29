@@ -36,12 +36,16 @@ router.get('/mon-hoc/:id', async function (req, res) {
 router.get('/', async function (req, res) {
     try {
         const query = {};
-        const {mon, khoi, chuong} = req.query;
-        if (mon) {
-            query.monhoc = mon;
+        const {mon, monhoc, khoi, khoihoc, chuong, id, ten} = req.query;
+        if (mon || monhoc) {
+            query.monhoc = mon|| monhoc;
         }
-        if (khoi) query.khoihoc = khoi;
+        if (khoi || khoihoc) query.khoihoc = khoi || khoihoc;
+
         if (chuong) query.chuong = chuong;
+        if (ten) query.ten = {$regex: `.*${ten}.*`, $options: 'i'};
+        if(id) query._id = id;
+        console.log('querrrrrrrrrrr >>>>', query);
         const rs = await handle.getByMonHocAndKhoiHoc(query);
         res.status(200).json(rs);
     } catch (error) {

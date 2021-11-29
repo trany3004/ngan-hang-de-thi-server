@@ -4,7 +4,11 @@ const Schema = mongoose.Schema
 const schema = new Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
+    },
+    fullName: {
+        type: String,
     },
     password: {
         type: String,
@@ -16,6 +20,9 @@ const schema = new Schema({
     role: {
         type: String,
         required: true
+    },
+    diaChi: {
+        type: String
     }
 }, {
     timestamps: true

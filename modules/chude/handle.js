@@ -4,6 +4,8 @@ const ChuDe = require("../model/chude");
 const MonHoc = require("../model/monhoc");
 const KhoiHoc = require("../model/khoihoc");
 const Chuong = require("../model/chuong");
+const fs = require("fs");
+const path = require("path");
 
 const create = async (data) => {
   try {
@@ -31,8 +33,16 @@ const create = async (data) => {
     data.monhoc = monhoc;
     data.khoihoc = khoihoc;
     data.chuong = chuong;
-    const res = await new ChuDe(data).save();
-    return await ChuDe.findById(res._id);
+    let res = await new ChuDe(data).save();
+    let rs = await ChuDe.findById(res._id);
+    if (data.file) {
+      const extended = data.fileName.substring(data.fileName.lastIndexOf('.'));
+      
+      fs.writeFileSync(path.join(global.BASE_DIR, 'public', 'upload', `${rs._id}${extended}`), data.file.replace(/^data:image\/.{1,30};base64,/, ""), 'base64');
+      rs.image = path.join('/upload', `${rs._id}${extended}`);
+      rs = await rs.save();
+    }
+    return rs;
   } catch (error) {
     logger.error("Create khoi hoc error: ", error);
     return null;
@@ -68,6 +78,13 @@ const update = async (id, data) => {
     chuDe.khoihoc = khoihoc;
   }
 
+  chuDe.noidung = data.noidung || chuDe.noidung;
+  if (data.file) {
+    const extended = data.fileName.substring(data.fileName.lastIndexOf('.'));
+    
+    fs.writeFileSync(path.join(global.BASE_DIR, 'public', 'upload', `${chuDe._id}${extended}`), data.file.replace(/^data:image\/.{1,30};base64,/, ""), 'base64');
+    chuDe.image = path.join('/upload', `${chuDe._id}${extended}`);
+  }
   await chuDe.save();
   return await ChuDe.findById(id);
 };

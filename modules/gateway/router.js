@@ -6,6 +6,8 @@ const monhoc = require('../monhoc')
 const khoihoc = require('../khoihoc')
 const chude = require('../chude')
 const chuong = require('../chuong')
+const cauhoi = require('../cauhoi')
+const ontap = require('../ontap')
 
 
 router.post('/login', authHandler.login)
@@ -15,4 +17,6 @@ router.use('/mon-hoc', monhoc.router)
 router.use('/khoi-hoc', khoihoc.router)
 router.use('/chu-de', chude.router)
 router.use('/chuong-hoc', chuong.router)
+router.use('/cau-hoi', cauhoi.router)
+router.use('/on-tap', ontap.router)
 module.exports = router;
