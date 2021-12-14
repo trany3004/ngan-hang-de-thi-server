@@ -32,7 +32,7 @@ const getToken = async (username = mandatory('username'), password = mandatory('
 const verify = async (headers = mandatory('headers')) => {
   const payload = await isValidToken(headers);
   const username = payload.username;
-  const checkUser = (await userHanl.getUsers({username}))[0];
+  const checkUser = (await userHanl.getUserByUsername(username));
   if (!checkUser) {
     throw new Error('Token is invalid');
   }

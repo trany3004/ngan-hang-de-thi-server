@@ -1,6 +1,9 @@
 const express = require('express')
 const router = new express.Router()
 const handle = require('./handle');
+const authen = require('../auth/token');
+const ChuDe = require('../model/chude');
+const OnTap = require('../model/ontap');
 //them mon hoc
 router.post('/', async(req, res) => {
     const body = req.body;
@@ -77,5 +80,46 @@ router.post('/submit', async function(req, res) {
         res.status(400).json(error);
     }
 })
+
+router.post('/ontap/submit', async function(req, res) {
+    try {
+        const token = req.headers.authorization;
+        let isViewMode = false;
+        let numberOfRightAnswer = 0;
+        if (token) {
+            const user = await authen.verify(req.headers);
+            if (user && user.role === 'vip') {
+                isViewMode = true;
+            }
+        }
+
+        const ontap = await OnTap.findOne({ chude: req.body.chude})
+        
+
+        let rs = await handle.submitMultipleAnswer(req.body.cauhoi);
+        rs.forEach((cauHoiDetail) => {
+            const isWrongAnswer = cauHoiDetail.dapAn.find((d) => d.wrongAnswer);
+            const isRightAnswer = cauHoiDetail.dapAn.find((d) => d.rightAnswer && d.selected);
+            if (!isWrongAnswer && isRightAnswer) {
+              numberOfRightAnswer += 1;
+              cauHoiDetail.rightAnwer = true;
+            }
+        })
+        const result = {
+            cauhoi: rs,
+            viewRole: isViewMode,
+            numberOfRightAnswer: numberOfRightAnswer,
+            numberOfWrongAnswer: rs.length - numberOfRightAnswer,
+            total: rs.length,
+            score: Math.round((numberOfRightAnswer * 10)/rs.length),
+            time: ontap.time || 15 * 60 * 60 * 1000
+        }
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+})
+
+
 
 module.exports = router

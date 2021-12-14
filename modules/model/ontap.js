@@ -2,11 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const schema = new Schema({
-    mucDo: {
-        type: Number,
-        required: true,
-        enum: [1, 2, 3]
-    },
     chude: 
         {
             type: Schema.Types.ObjectId,
@@ -15,8 +10,11 @@ const schema = new Schema({
 
     cauhoi: [{
         type: Schema.Types.ObjectId,
-        ref: 'cauhoi'
+        ref: 'cauHoi'
     }],
+    time: {
+        type: Number
+    }
   
 }, {
     timestamps: true

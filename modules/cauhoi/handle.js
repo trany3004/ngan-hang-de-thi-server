@@ -130,6 +130,50 @@ const submitAnswer = async (payload) => {
   return cauHoiDetail;
 };
 
+const submitMultipleAnswer = async (payload) => {
+  const ids = payload.map((e) => e.id);
+  let listCauHoi = await CauHoi.find({_id: {$in: ids}}).lean();
+  const sortList = [];
+  ids.forEach((c) => {
+    const correspondingCauHoi = listCauHoi.find(({_id}) => c === String(_id));
+    sortList.push(correspondingCauHoi);
+  })
+  sortList.forEach((cauHoiDetail, index) => {
+    if (!cauHoiDetail.isDrapDrop) {
+      const dapAnSelected = payload[index].dapAn;
+      cauHoiDetail.dapAn = cauHoiDetail.dapAn.map((dapAn) => {
+        const dapAnObj = {
+          noidung: dapAn,
+        };
+        const selected = dapAnSelected.includes(dapAn);
+        const isRightAnswer = cauHoiDetail.dapAnDung.includes(dapAn);
+        if (isRightAnswer) {
+          dapAnObj.rightAnswer = true;
+        }
+  
+        if (!isRightAnswer && selected) {
+          dapAnObj.wrongAnswer = true;
+        }
+        dapAnObj.selected = selected;
+        return dapAnObj;
+      });
+    } else {
+      cauHoiDetail.dapAn = payload[index].dapAn.map((dapAn, index) => {
+        const dapAnObj = {
+          noidung: dapAn,
+        };
+        if (cauHoiDetail.dapAnDung[index] === dapAn) {
+          dapAnObj.rightAnswer = true;
+        } else {
+          dapAnObj.wrongAnswer = true;
+        }
+        return dapAnObj
+      });
+    }
+  })
+  return listCauHoi;
+};
+
 module.exports = {
   create,
   update,
@@ -139,4 +183,5 @@ module.exports = {
   count,
   createRandomQuestion,
   submitAnswer,
+  submitMultipleAnswer
 };

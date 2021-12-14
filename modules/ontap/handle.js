@@ -8,10 +8,14 @@ const {shuffle} = require("../common/common");
 const create = async (data) => {
   try {
     if (!data) throw "Dữ liệu không hợp lệ";
-    if (!data.mucDo || !data.chude || !data.cauhoi)
+    if (!data.chude || !data.cauhoi)
       throw "Dữ liệu không hợp lệ";
+    data.cauHoi = data.cauhoi || data.cauHoi;
+    const cauHoi = await CauHoi.find({_id: {$in: data.cauHoi}});
+    data.cauHoi = cauHoi;
     const chude = await ChuDe.findById(data.chude);
     if (!chude) throw "Chủ đề không tồn tại";
+    data.time = data.time * 1000 * 60;
     const res = await new OnTap(data).save();
     return await OnTap.findById(res._id);
   } catch (error) {
