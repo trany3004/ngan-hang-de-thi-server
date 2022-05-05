@@ -10,6 +10,7 @@ const cauhoi = require('../cauhoi')
 const ontap = require('../ontap')
 
 
+
 router.post('/login', authHandler.login)
 router.use('/user', userHandle.router)
 
@@ -19,4 +20,5 @@ router.use('/chu-de', chude.router)
 router.use('/chuong-hoc', chuong.router)
 router.use('/cau-hoi', cauhoi.router)
 router.use('/on-tap', ontap.router)
+
 module.exports = router;
