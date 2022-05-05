@@ -15,15 +15,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/api/v1', gateway.router);
-
-app.use((req, res) => {
-  res.status(404).json({ message: `CANNOT ${req.method} API ${req.originalUrl}` });
-});
-
-app.use((err, req, res, _next) => res.status(500).json({ message: err.message || String(err) }));
+app.use(express.static('./public/education'));
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/public/education/index.html'))
+})
 
 require('./modules/database').connectDB();
-
+const forceSSL = function () {
+  return function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(
+        ['https://', req.get('Host'), req.url].join('')
+      );
+    }
+    next();
+  }
+};
+app.use(forceSSL());
 const server = http.createServer(app);
 server.listen(config.port.http, (err) => {
   if (err) {

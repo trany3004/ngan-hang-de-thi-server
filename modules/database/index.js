@@ -8,7 +8,7 @@ const dbName = process.env.DB_NAME || 'mydb'
 console.log(`db: ${dbName}`)
 const dbUri = process.env.DB_URI
 console.log(`dbUri: ${dbUri}`)
-const uri = `mongodb://${host}:${port}/${dbName}`;
+const uri = `mongodb+srv://nhuy:nhuy30042000@cluster0.bmiiq.mongodb.net/education?retryWrites=true&w=majority`;
 
 console.log(`uri: ${uri}`)
 const connectDB = () => {
