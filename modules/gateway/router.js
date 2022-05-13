@@ -8,6 +8,7 @@ const chude = require('../chude')
 const chuong = require('../chuong')
 const cauhoi = require('../cauhoi')
 const ontap = require('../ontap')
+const contact = require('../contact')
 
 
 
@@ -20,5 +21,7 @@ router.use('/chu-de', chude.router)
 router.use('/chuong-hoc', chuong.router)
 router.use('/cau-hoi', cauhoi.router)
 router.use('/on-tap', ontap.router)
+router.use('/contact', contact);
+
 
 module.exports = router;

@@ -31,7 +31,6 @@ const forceSSL = function () {
     next();
   }
 };
-app.use(forceSSL());
 const server = http.createServer(app);
 server.listen(config.port.http, (err) => {
   if (err) {
